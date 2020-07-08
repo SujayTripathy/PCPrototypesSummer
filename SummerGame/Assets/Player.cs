@@ -1,29 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 public class Player : MonoBehaviour
 {
     Rigidbody body;
     Animator anim;
 
+    GameObject lookAt;
     float vertical;
     float horizontal;
     
     [SerializeField]
     float speed=1;
 
+    [SerializeField]
+    bool lockedOn=false;
+
+    [SerializeField]
+    CinemachineFreeLook playerCamera;
+    [SerializeField]
+    Head head;
+
     private void Start() {
         body=GetComponent<Rigidbody>();
         anim=GetComponent<Animator>();
+        lookAt=playerCamera.LookAt.gameObject;
     }
 
     private void Update() {
         vertical=Input.GetAxis("Vertical");
         horizontal=Input.GetAxis("Horizontal");
-        Debug.Log(horizontal);
+
         anim.SetFloat("WalkSpeed",vertical);
         anim.SetFloat("StrafeSpeed",horizontal);
+        
         if(vertical!=0 || horizontal!=0)
         {    
             anim.SetBool("Walk",true);
@@ -32,11 +43,40 @@ public class Player : MonoBehaviour
             anim.SetBool("Walk",false);
         }
 
+        if(Input.GetButtonUp("LockOn")){
+            if(lockedOn){
+                lockedOn=false;
+                playerCamera.LookAt=lookAt.transform;
+            }
+            else{
+                RaycastHit hit;
+                Debug.Log("Called");
+                if(Physics.SphereCast(head.transform.position,1,-head.transform.forward,out hit,100)){
+                    if(hit.transform.tag=="Target"){
+                        Debug.Log(hit.transform.name);
+                        playerCamera.LookAt=hit.transform;
+                        lockedOn=true;
+                    }
+                    else{
+                        Debug.Log("Nothing targetable");
+                    }
+                }               
+            }
+        }
+
     }
 
+    
+
     private void FixedUpdate() {
-        //body.AddRelativeForce(Vector3.forward*Mathf.Clamp(vertical,-0.3f,1));
+        if(lockedOn){
         body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
-        
+        }
+        else{
+        Vector3 direction=Camera.main.transform.forward;
+        direction.y=0;
+        direction.Normalize();
+        body.AddForce(direction*speed);
+        }
     }
 }
