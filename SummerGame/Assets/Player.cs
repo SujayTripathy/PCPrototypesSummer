@@ -22,10 +22,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     Head head;
 
+    float xAxisCameraSpeed;
+    float yAxisCameraSpeed;
+
     private void Start() {
         body=GetComponent<Rigidbody>();
         anim=GetComponent<Animator>();
         lookAt=playerCamera.LookAt.gameObject;
+        xAxisCameraSpeed=playerCamera.m_XAxis.m_MaxSpeed;
+        yAxisCameraSpeed=playerCamera.m_YAxis.m_MaxSpeed;
     }
 
     private void Update() {
@@ -47,6 +52,9 @@ public class Player : MonoBehaviour
             if(lockedOn){
                 lockedOn=false;
                 playerCamera.LookAt=lookAt.transform;
+                playerCamera.m_YAxis.m_MaxSpeed=yAxisCameraSpeed;
+                playerCamera.m_XAxis.m_MaxSpeed=xAxisCameraSpeed;
+                body.freezeRotation=true;
             }
             else{
                 RaycastHit hit;
@@ -55,6 +63,8 @@ public class Player : MonoBehaviour
                     if(hit.transform.tag=="Target"){
                         Debug.Log(hit.transform.name);
                         playerCamera.LookAt=hit.transform;
+                        playerCamera.m_YAxis.m_MaxSpeed=0;
+                        playerCamera.m_XAxis.m_MaxSpeed=0;
                         lockedOn=true;
                     }
                     else{
@@ -62,6 +72,7 @@ public class Player : MonoBehaviour
                     }
                 }               
             }
+            anim.SetBool("LockedOn",lockedOn);
         }
 
     }
@@ -76,7 +87,11 @@ public class Player : MonoBehaviour
         Vector3 direction=Camera.main.transform.forward;
         direction.y=0;
         direction.Normalize();
-        body.AddForce(direction*speed);
+        if(vertical!=0||horizontal!=0){
+            Debug.Log(new Vector3(horizontal,0,vertical).normalized);
+            //Debug.Log((new Vector3(horizontal,0,vertical)+direction).normalized);
+            body.AddRelativeForce((new Vector3(horizontal,0,vertical).normalized+direction).normalized*speed);
+        }
         }
     }
 }
