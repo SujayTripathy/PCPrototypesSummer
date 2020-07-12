@@ -41,7 +41,11 @@ public class Player : MonoBehaviour
         anim.SetFloat("StrafeSpeed",horizontal);
         
         if(vertical!=0 || horizontal!=0)
-        {    
+        {   
+            Vector3 direction=Camera.main.transform.forward;
+            direction.y=0;
+            //transform.forward=direction;
+            transform.forward=Vector3.Lerp(transform.forward,direction,0.5f);
             anim.SetBool("Walk",true);
         }
         else{
@@ -80,18 +84,6 @@ public class Player : MonoBehaviour
     
 
     private void FixedUpdate() {
-        if(lockedOn){
         body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
-        }
-        else{
-        Vector3 direction=Camera.main.transform.forward;
-        direction.y=0;
-        direction.Normalize();
-        if(vertical!=0||horizontal!=0){
-            Debug.Log(new Vector3(horizontal,0,vertical).normalized);
-            //Debug.Log((new Vector3(horizontal,0,vertical)+direction).normalized);
-            body.AddRelativeForce((new Vector3(horizontal,0,vertical).normalized+direction).normalized*speed);
-        }
-        }
     }
 }
