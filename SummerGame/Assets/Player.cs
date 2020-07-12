@@ -19,6 +19,10 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     CinemachineFreeLook playerCamera;
+
+    [SerializeField]
+    Cinemachine.CinemachineTargetGroup lockOnGroup;
+
     [SerializeField]
     Head head;
 
@@ -40,6 +44,10 @@ public class Player : MonoBehaviour
         anim.SetFloat("WalkSpeed",vertical);
         anim.SetFloat("StrafeSpeed",horizontal);
         
+        
+        //body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
+        
+        
         if(vertical!=0 || horizontal!=0)
         {   
             Vector3 direction=Camera.main.transform.forward;
@@ -59,6 +67,7 @@ public class Player : MonoBehaviour
                 playerCamera.m_YAxis.m_MaxSpeed=yAxisCameraSpeed;
                 playerCamera.m_XAxis.m_MaxSpeed=xAxisCameraSpeed;
                 body.freezeRotation=true;
+                lockOnGroup.RemoveMember(lockOnGroup.m_Targets[1].target.transform);
             }
             else{
                 RaycastHit hit;
@@ -66,7 +75,8 @@ public class Player : MonoBehaviour
                 if(Physics.SphereCast(head.transform.position,1,-head.transform.forward,out hit,100)){
                     if(hit.transform.tag=="Target"){
                         Debug.Log(hit.transform.name);
-                        playerCamera.LookAt=hit.transform;
+                        //playerCamera.LookAt=hit.transform;
+                        lockOnGroup.AddMember(hit.transform,1,0);
                         playerCamera.m_YAxis.m_MaxSpeed=0;
                         playerCamera.m_XAxis.m_MaxSpeed=0;
                         lockedOn=true;
@@ -76,7 +86,6 @@ public class Player : MonoBehaviour
                     }
                 }               
             }
-            anim.SetBool("LockedOn",lockedOn);
         }
 
     }
