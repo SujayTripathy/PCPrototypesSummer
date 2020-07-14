@@ -26,6 +26,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     Head head;
 
+    [SerializeField]  
+    Axe axe;
+    Rigidbody axeBody;
+
+    bool thrown=false;
+    bool hit=false;
+    [SerializeField]
+    float throwStrength=50;
+
     float xAxisCameraSpeed;
     float yAxisCameraSpeed;
 
@@ -35,6 +44,8 @@ public class Player : MonoBehaviour
         lookAt=playerCamera.LookAt.gameObject;
         xAxisCameraSpeed=playerCamera.m_XAxis.m_MaxSpeed;
         yAxisCameraSpeed=playerCamera.m_YAxis.m_MaxSpeed;
+
+        axeBody=axe.GetComponent<Rigidbody>();
     }
 
     private void Update() {
@@ -80,6 +91,7 @@ public class Player : MonoBehaviour
                         playerCamera.m_YAxis.m_MaxSpeed=0;
                         playerCamera.m_XAxis.m_MaxSpeed=0;
                         lockedOn=true;
+                        
                     }
                     else{
                         Debug.Log("Nothing targetable");
@@ -88,6 +100,41 @@ public class Player : MonoBehaviour
             }
         }
 
+        if(Input.GetButtonUp("Fire1")){
+            if(!thrown)
+                Throw();
+            else if(axe.hit){
+                Pull();
+            }
+        }
+
+    }
+
+    void Pull(){
+        
+    }
+
+    void Throw(){
+            Debug.Log("Throwing Axe");
+            anim.SetTrigger("Throw");
+            body.constraints=RigidbodyConstraints.FreezeAll;
+    }
+
+    public void AxeMotion(){
+        if(!thrown){
+        thrown=true;
+        axe.transform.parent=null;
+        axeBody.isKinematic=false;
+        axeBody.AddForce(Camera.main.transform.forward.normalized*throwStrength,ForceMode.VelocityChange);
+        axeBody.AddRelativeTorque(1000,0,0,ForceMode.VelocityChange);
+        axe.GetComponentInChildren<BoxCollider>().enabled=true;
+        }
+        
+    }
+
+    public void ThrowEnd(){
+        if(!thrown)
+            body.constraints=RigidbodyConstraints.FreezeRotation;
     }
 
     

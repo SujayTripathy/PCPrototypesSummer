@@ -36,6 +36,7 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Axe.cs" />
      <Compile Include="Assets\Head.cs" />
      <Compile Include="Assets\Player.cs" />
      <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
