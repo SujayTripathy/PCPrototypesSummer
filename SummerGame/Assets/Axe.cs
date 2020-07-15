@@ -6,7 +6,7 @@ public class Axe : MonoBehaviour
 {
 
     Rigidbody body;
-    public bool hit;
+    public bool hit=false;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,11 +15,7 @@ public class Axe : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {  
-        if(hit){
-            
-        }
-        
+    {   
     }
 
     private void OnCollisionEnter(Collision other) {

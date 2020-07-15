@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using DG.Tweening;
 public class Player : MonoBehaviour
 {
     Rigidbody body;
@@ -32,8 +33,16 @@ public class Player : MonoBehaviour
 
     bool thrown=false;
     bool hit=false;
+
     [SerializeField]
     float throwStrength=50;
+
+    [SerializeField]
+    GameObject axePath;
+
+    Vector3 initialAxePosition;
+    Quaternion initialAxeRotation;
+    Transform initialParent;
 
     float xAxisCameraSpeed;
     float yAxisCameraSpeed;
@@ -41,11 +50,19 @@ public class Player : MonoBehaviour
     private void Start() {
         body=GetComponent<Rigidbody>();
         anim=GetComponent<Animator>();
+
+        //Camera Stuff
         lookAt=playerCamera.LookAt.gameObject;
         xAxisCameraSpeed=playerCamera.m_XAxis.m_MaxSpeed;
         yAxisCameraSpeed=playerCamera.m_YAxis.m_MaxSpeed;
 
+        
+        
+        //Axe Return Stuff
         axeBody=axe.GetComponent<Rigidbody>();
+        initialParent=axe.transform.parent;
+        initialAxePosition=axe.transform.localPosition;
+        initialAxeRotation=axe.transform.localRotation;
     }
 
     private void Update() {
@@ -104,15 +121,21 @@ public class Player : MonoBehaviour
             if(!thrown)
                 Throw();
             else if(axe.hit){
-                Pull();
+                axe.GetComponentInChildren<BoxCollider>().enabled=false;
+                axe.transform.parent=initialParent;
+                axeBody.isKinematic=true;
+                
+            Vector3[] path=new[]{axePath.transform.localPosition,initialAxePosition};
+            axe.transform.DOLocalPath(path,0.3f,PathType.CatmullRom);
+            axeBody.constraints=RigidbodyConstraints.FreezeRotationZ;
+            axeBody.constraints=RigidbodyConstraints.FreezeRotationY;
+            axe.transform.DOLocalRotate(initialAxeRotation.eulerAngles,0.3f);
+            thrown=false;
+            axe.hit=false;
             }
         }
+   }
 
-    }
-
-    void Pull(){
-        
-    }
 
     void Throw(){
             Debug.Log("Throwing Axe");
@@ -122,7 +145,7 @@ public class Player : MonoBehaviour
 
     public void AxeMotion(){
         if(!thrown){
-        thrown=true;
+        
         axe.transform.parent=null;
         axeBody.isKinematic=false;
         axeBody.AddForce(Camera.main.transform.forward.normalized*throwStrength,ForceMode.VelocityChange);
@@ -133,8 +156,10 @@ public class Player : MonoBehaviour
     }
 
     public void ThrowEnd(){
-        if(!thrown)
+        if(!thrown){
+            thrown=true;
             body.constraints=RigidbodyConstraints.FreezeRotation;
+        }
     }
 
     
