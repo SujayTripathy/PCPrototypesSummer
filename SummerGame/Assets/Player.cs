@@ -37,8 +37,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     float throwStrength=50;
 
-    [SerializeField]
-    GameObject axePath;
 
     Vector3 initialAxePosition;
     Quaternion initialAxeRotation;
@@ -121,19 +119,31 @@ public class Player : MonoBehaviour
             if(!thrown)
                 Throw();
             else if(axe.hit){
-                axe.GetComponentInChildren<BoxCollider>().enabled=false;
-                axe.transform.parent=initialParent;
-                axeBody.isKinematic=true;
-                
-            Vector3[] path=new[]{axePath.transform.localPosition,initialAxePosition};
-            axe.transform.DOLocalPath(path,0.3f,PathType.CatmullRom);
-            axeBody.constraints=RigidbodyConstraints.FreezeRotationZ;
-            axeBody.constraints=RigidbodyConstraints.FreezeRotationY;
-            axe.transform.DOLocalRotate(initialAxeRotation.eulerAngles,0.3f);
-            thrown=false;
-            axe.hit=false;
+                Catch();
             }
         }
+   }
+
+   void Catch(){
+       Debug.Log("Catching");
+       anim.SetTrigger("Catch");
+   }
+
+   public void AxeReturn(){
+        axe.GetComponentInChildren<BoxCollider>().enabled=false;
+        axe.transform.parent=initialParent;
+        axeBody.isKinematic=true;               
+        body.constraints=RigidbodyConstraints.FreezeAll;
+        axe.transform.DOLocalMove(initialAxePosition,0.3f);
+        axeBody.constraints=RigidbodyConstraints.FreezeRotationZ;
+        axeBody.constraints=RigidbodyConstraints.FreezeRotationY;
+        axe.transform.DOLocalRotate(initialAxeRotation.eulerAngles,0.3f);
+        thrown=false;
+        axe.hit=false;
+   }
+
+   void Unfreeze(){
+       body.constraints=RigidbodyConstraints.FreezeRotation;
    }
 
 
@@ -158,8 +168,12 @@ public class Player : MonoBehaviour
     public void ThrowEnd(){
         if(!thrown){
             thrown=true;
-            body.constraints=RigidbodyConstraints.FreezeRotation;
+            Unfreeze();
         }
+    }
+
+    public void CatchEnd(){
+        Unfreeze();
     }
 
     
