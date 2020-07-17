@@ -50,10 +50,8 @@ public class Player : MonoBehaviour
         anim.SetFloat("StrafeSpeed",horizontal);
         
         
-        //body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
         
-        
-        if(vertical!=0 || horizontal!=0)
+        if(vertical!=0 || horizontal!=0)                    //Walking 
         {   
             Vector3 direction=Camera.main.transform.forward;
             direction.y=0;
@@ -64,7 +62,7 @@ public class Player : MonoBehaviour
             anim.SetBool("Walk",false);
         }
 
-        if(Input.GetButtonUp("LockOn")){
+        if(Input.GetButtonUp("LockOn")){                //LockOn CameraStuff
             if(lockedOn){
                 lockedOn=false;
                 playerCamera.LookAt=lookAt.transform;
@@ -73,13 +71,12 @@ public class Player : MonoBehaviour
                 body.freezeRotation=true;
                 lockOnGroup.RemoveMember(lockOnGroup.m_Targets[1].target.transform);
             }
-            else{
+            else{                                                                                   //LockOn Logic
                 RaycastHit hit;
                 Debug.Log("Called");
                 if(Physics.SphereCast(head.transform.position,1,-head.transform.forward,out hit,100)){
                     if(hit.transform.tag=="Target"){
                         Debug.Log(hit.transform.name);
-                        //playerCamera.LookAt=hit.transform;
                         lockOnGroup.AddMember(hit.transform,1,0);
                         playerCamera.m_YAxis.m_MaxSpeed=0;
                         playerCamera.m_XAxis.m_MaxSpeed=0;
@@ -95,6 +92,8 @@ public class Player : MonoBehaviour
    }
     
     private void FixedUpdate() {
+        if(vertical>0.1||vertical<-0.1||horizontal>0.1||horizontal<-0.1){                                       //Deadzone
         body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.5f,1))*speed,ForceMode.Acceleration);
+        }
     }
 }

@@ -179,6 +179,8 @@ public class PlayerAxe : MonoBehaviour
     
 
     private void FixedUpdate() {
-        body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
+        if(vertical>0.1||vertical<-0.1||horizontal>0.1||horizontal<-0.1){                                       //Deadzone
+        body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.5f,1))*speed,ForceMode.Acceleration);
+        }
     }
 }

@@ -29,6 +29,9 @@ public class BowPlayer : MonoBehaviour
     [SerializeField]
     float jumpPower=10;
 
+    [SerializeField]
+    float groundRay=100;
+
 
     float xAxisCameraSpeed;
     float yAxisCameraSpeed;
@@ -36,7 +39,6 @@ public class BowPlayer : MonoBehaviour
     private void Start() {
         body=GetComponent<Rigidbody>();
         anim=GetComponent<Animator>();
-
         //Camera Stuff
         lookAt=playerCamera.LookAt.gameObject;
         xAxisCameraSpeed=playerCamera.m_XAxis.m_MaxSpeed;
@@ -54,18 +56,35 @@ public class BowPlayer : MonoBehaviour
         
         
         //body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
-        
-        
-        if(vertical!=0 || horizontal!=0)
-        {   
-            Vector3 direction=Camera.main.transform.forward;
-            direction.y=0;
-            transform.forward=Vector3.Lerp(transform.forward,direction,0.5f);
-            anim.SetBool("Walk",true);
-        }
-        else{
+        RaycastHit hit1;
+        if(Physics.Raycast(transform.position,-transform.up,out hit1,groundRay)){ 
+            Debug.Log(hit1.distance);
+           if(hit1.transform.tag=="Ground"&& hit1.distance<0.0004){
+               anim.SetBool("Fall",false);
+                if(vertical!=0 || horizontal!=0)
+                {   
+                    Vector3 direction=Camera.main.transform.forward;
+                    direction.y=0;
+                    transform.forward=Vector3.Lerp(transform.forward,direction,0.5f);
+                    anim.SetBool("Walk",true);
+                }
+                else{
+                    anim.SetBool("Walk",false);
+                }
+
+                if(Input.GetButtonUp("Jump")){
+                anim.SetTrigger("Jump");
+                }
+           }
+            else if(hit1.distance>0.0007){     
+                if(!anim.GetBool("Fall"))                 {            
+                anim.SetBool("Fall",true);
+            }
             anim.SetBool("Walk",false);
+            //Debug.Log("In DA AIR");
         }
+        }
+
 
         if(Input.GetButtonUp("LockOn")){
             if(lockedOn){
@@ -96,9 +115,7 @@ public class BowPlayer : MonoBehaviour
             }
         }
 
-        if(Input.GetButtonUp("Jump")){
-           anim.SetTrigger("Jump");
-        }
+
    }
 
    public void Jump(){
@@ -107,7 +124,15 @@ public class BowPlayer : MonoBehaviour
    }
     
     private void FixedUpdate() {
-        body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
+        RaycastHit hit1;
+        if(Physics.Raycast(transform.position,-transform.up,out hit1,groundRay)){ 
+            if(hit1.transform.tag=="Ground" && hit1.distance<0.0004){
+            //Debug.Log("On Ground");
+            if(vertical>0.1||vertical<-0.1||horizontal>0.1||horizontal<-0.1){                                       //Deadzone
+            body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.5f,1))*speed,ForceMode.Acceleration);
+            }
+        }
+        }
     }
 }
 

@@ -745,17 +745,17 @@ PrefabInstance:
     - target: {fileID: 2909857894559841730, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.00000075301176
+      value: -0.000001088827
       objectReference: {fileID: 0}
     - target: {fileID: 2909857894559841730, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00000003156051
+      value: -0.000000045635325
       objectReference: {fileID: 0}
     - target: {fileID: 2909857894559841730, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.000000020284858
+      value: 0.00000014246399
       objectReference: {fileID: 0}
     - target: {fileID: 2909857894559841730, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
@@ -831,6 +831,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_CollisionDetection
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2909857895485389349, guid: ec3fff274f339aa4c82ec772fc8a8457,
+        type: 3}
+      propertyPath: m_Mass
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2909857895485389349, guid: ec3fff274f339aa4c82ec772fc8a8457,
+        type: 3}
+      propertyPath: m_Drag
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2909857895485389355, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
@@ -2100,7 +2110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64c38129f2e13cc4a84aea012c9c9476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 30
   lockedOn: 0
   playerCamera: {fileID: 456530000}
   lockOnGroup: {fileID: 1964375759}
