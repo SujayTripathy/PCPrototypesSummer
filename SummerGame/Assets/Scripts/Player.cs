@@ -95,6 +95,6 @@ public class Player : MonoBehaviour
    }
     
     private void FixedUpdate() {
-        body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
+        body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.5f,1))*speed,ForceMode.Acceleration);
     }
 }
