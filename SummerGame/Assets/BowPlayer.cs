@@ -37,6 +37,9 @@ public class BowPlayer : MonoBehaviour
     float yAxisCameraSpeed;
     float cameraOffset;
 
+    [SerializeField]
+    float aimZoom=1.6f;
+
     private void Start() {
         body=GetComponent<Rigidbody>();
         anim=GetComponent<Animator>();
@@ -116,12 +119,14 @@ public class BowPlayer : MonoBehaviour
             }
         }
         Debug.Log(Input.GetAxis("Aim"));
-        if(Input.GetAxis("Aim")<0){
+        if(Input.GetAxis("Aim")==-1){
             Debug.Log("Aiming");
-            //Mathf.Lerp(playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z,cameraOffset+1.6f,1f);
-            playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=cameraOffset+1.6f;
+            playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=Mathf.Lerp(playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z,cameraOffset+aimZoom,0.1f);
+            //playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=cameraOffset-(1.6f*Input.GetAxis("Aim"));
         }
-
+        else{
+            playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=Mathf.Lerp(playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z,cameraOffset,0.1f);
+        }
 
    }
 
