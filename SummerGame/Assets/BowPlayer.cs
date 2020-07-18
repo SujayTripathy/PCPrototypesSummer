@@ -119,14 +119,22 @@ public class BowPlayer : MonoBehaviour
             }
         }
         Debug.Log(Input.GetAxis("Aim"));
-        if(Input.GetAxis("Aim")==-1){
+        if(Input.GetAxis("Aim")==1){
             Debug.Log("Aiming");
+            if(!anim.GetBool("Aim"))
+                anim.SetBool("Aim",true);
             playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=Mathf.Lerp(playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z,cameraOffset+aimZoom,0.1f);
             //playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=cameraOffset-(1.6f*Input.GetAxis("Aim"));
         }
         else{
+            if(anim.GetBool("Aim"))
+                anim.SetBool("Aim",false);
             playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=Mathf.Lerp(playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z,cameraOffset,0.1f);
         }
+        if(Input.GetAxis("Shoot")==1 && anim.GetBool("Aim")){
+           Debug.Log("Shooting");
+           anim.SetTrigger("Shoot");        
+         }
 
    }
 

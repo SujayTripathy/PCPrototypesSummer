@@ -725,7 +725,7 @@ MonoBehaviour:
   head: {fileID: 1975942647}
   jumpPower: 5
   groundRay: 100
-  aimZoom: 1.6
+  aimZoom: 1
 --- !u!1001 &1230552371
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -751,7 +751,7 @@ PrefabInstance:
     - target: {fileID: 2909857894482060563, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.061501488
+      value: -0.06150149
       objectReference: {fileID: 0}
     - target: {fileID: 2909857894482060563, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
@@ -841,7 +841,7 @@ PrefabInstance:
     - target: {fileID: 2909857894675751055, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.058778968
+      value: -0.05877897
       objectReference: {fileID: 0}
     - target: {fileID: 2909857894675751055, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
@@ -901,7 +901,7 @@ PrefabInstance:
     - target: {fileID: 2909857895963424396, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.061501488
+      value: -0.06150149
       objectReference: {fileID: 0}
     - target: {fileID: 2909857895963424396, guid: ec3fff274f339aa4c82ec772fc8a8457,
         type: 3}
