@@ -59,7 +59,6 @@ public class BowPlayer : MonoBehaviour
         anim.SetFloat("StrafeSpeed",horizontal);
         
         
-        //body.AddRelativeForce(new Vector3(horizontal,0,Mathf.Clamp(vertical,-0.3f,1))*speed);
         RaycastHit hit1;
         if(Physics.Raycast(transform.position,-transform.up,out hit1,groundRay)){ 
             Debug.Log(hit1.distance);
@@ -77,16 +76,17 @@ public class BowPlayer : MonoBehaviour
                 }
 
                 if(Input.GetButtonUp("Jump")){
-                anim.SetTrigger("Jump");
+                    anim.SetTrigger("Jump");
                 }
            }
             else if(hit1.distance>0.0007){     
-                if(!anim.GetBool("Fall"))                 {            
+                if(!anim.GetBool("Fall")){            
                 anim.SetBool("Fall",true);
+            
             }
             anim.SetBool("Walk",false);
-            //Debug.Log("In DA AIR");
-        }
+            Debug.Log("In DA AIR");
+            }
         }
 
 
@@ -121,20 +121,28 @@ public class BowPlayer : MonoBehaviour
         Debug.Log(Input.GetAxis("Aim"));
         if(Input.GetAxis("Aim")==1){
             Debug.Log("Aiming");
-            if(!anim.GetBool("Aim"))
+            if(!anim.GetBool("Aim")){
+                body.constraints=RigidbodyConstraints.FreezePositionX|RigidbodyConstraints.FreezePositionZ;
                 anim.SetBool("Aim",true);
+                Time.timeScale=0.5f;
+                Time.fixedDeltaTime=Time.timeScale*0.02f;
+            }
             playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=Mathf.Lerp(playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z,cameraOffset+aimZoom,0.1f);
-            //playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=cameraOffset-(1.6f*Input.GetAxis("Aim"));
         }
         else{
-            if(anim.GetBool("Aim"))
+            if(anim.GetBool("Aim")){
                 anim.SetBool("Aim",false);
+                Time.timeScale=1;
+                Time.fixedDeltaTime=Time.timeScale*0.02f;
+                body.constraints=RigidbodyConstraints.FreezeRotation;
+            }
             playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z=Mathf.Lerp(playerCamera.GetComponent<CinemachineCameraOffset>().m_Offset.z,cameraOffset,0.1f);
         }
         if(Input.GetAxis("Shoot")==1 && anim.GetBool("Aim")){
-           Debug.Log("Shooting");
-           anim.SetTrigger("Shoot");        
+            Debug.Log("Shooting");
+            anim.SetTrigger("Shoot");        
          }
+        
 
    }
 
