@@ -61,9 +61,9 @@ public class BowPlayer : MonoBehaviour
         
         RaycastHit hit1;
         if(Physics.Raycast(transform.position,-transform.up,out hit1,groundRay)){ 
-            Debug.Log(hit1.distance);
+           Debug.Log(hit1.distance);
            if(hit1.transform.tag=="Ground"&& hit1.distance<0.0004){
-               anim.SetBool("Fall",false);
+               //anim.SetBool("Fall",false);
                 if(vertical!=0 || horizontal!=0)
                 {   
                     Vector3 direction=Camera.main.transform.forward;
@@ -80,10 +80,9 @@ public class BowPlayer : MonoBehaviour
                 }
            }
             else if(hit1.distance>0.0007){     
-                if(!anim.GetBool("Fall")){            
-                anim.SetBool("Fall",true);
-            
-            }
+            //     if(!anim.GetBool("Fall")){            
+            //     anim.SetBool("Fall",true);
+            // }
             anim.SetBool("Walk",false);
             Debug.Log("In DA AIR");
             }
@@ -118,7 +117,7 @@ public class BowPlayer : MonoBehaviour
                 }               
             }
         }
-        Debug.Log(Input.GetAxis("Aim"));
+        //Debug.Log(Input.GetAxis("Aim"));
         if(Input.GetAxis("Aim")==1){
             Debug.Log("Aiming");
             if(!anim.GetBool("Aim")){
